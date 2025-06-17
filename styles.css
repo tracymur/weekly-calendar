@@ -1,0 +1,10 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #ffffff;
+}
+...
+@media (max-width: 768px) {
+    .calendar-grid {
+        grid-template-columns: 1fr;
+    }
+}
