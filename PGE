@@ -1,0 +1,402 @@
+   body {
+        font-family: 'Inter', sans-serif;
+        background-color: #ffffff;
+    }
+    
+    .bg-primary {
+        background-color: var(--primary);
+    }
+    
+    .bg-secondary {
+        background-color: var(--secondary);
+    }
+    
+    .text-primary {
+        color: var(--primary);
+    }
+    
+    .text-secondary {
+        color: var(--secondary);
+    }
+    
+    .border-primary {
+        border-color: var(--primary);
+    }
+    
+    .calendar-day {
+        min-height: 150px;
+    }
+    
+    .meeting-item {
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .meeting-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-content {
+        background-color: #fefefe;
+        margin: 10% auto;
+        padding: 20px;
+        width: 80%;
+        max-width: 600px;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        animation: modalFadeIn 0.3s;
+    }
+    
+    @keyframes modalFadeIn {
+        from {opacity: 0; transform: translateY(-20px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+    
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .close:hover {
+        color: var(--primary);
+    }
+    
+    .hidden-meeting {
+        display: none;
+    }
+    
+    @media (max-width: 768px) {
+        .calendar-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+    <div class="bg-white p-4 mb-6 rounded-lg shadow-sm">
+        <h2 class="text-xl font-bold text-primary mb-3">Filter by Role</h2>
+        <div class="flex flex-wrap gap-2 mb-5">
+            <button class="role-filter px-4 py-2 rounded-full bg-primary text-white font-medium hover:bg-opacity-90 transition" data-role="all">All Roles</button>
+            <button class="role-filter px-4 py-2 rounded-full bg-white text-primary border border-primary font-medium hover:bg-primary hover:text-white transition" data-role="seller">Seller</button>
+            <button class="role-filter px-4 py-2 rounded-full bg-white text-primary border border-primary font-medium hover:bg-primary hover:text-white transition" data-role="flm">First-Line Manager</button>
+            <button class="role-filter px-4 py-2 rounded-full bg-white text-primary border border-primary font-medium hover:bg-primary hover:text-white transition" data-role="geo">GEO Leader</button>
+            <button class="role-filter px-4 py-2 rounded-full bg-white text-primary border border-primary font-medium hover:bg-primary hover:text-white transition" data-role="global">Global Leader</button>
+        </div>
+        
+        <div class="text-lg font-semibold mb-2">Time Commitment Summary:</div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-gray-50 p-3 rounded-lg">
+                <div class="text-sm text-gray-500">Seller</div>
+                <div class="text-xl font-bold text-primary"><span id="seller-hours">4.75</span> hours/week</div>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-lg">
+                <div class="text-sm text-gray-500">First-Line Manager</div>
+                <div class="text-xl font-bold text-primary"><span id="flm-hours">7.25</span> hours/week</div>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-lg">
+                <div class="text-sm text-gray-500">GEO Leader</div>
+                <div class="text-xl font-bold text-primary"><span id="geo-hours">5.5</span> hours/week</div>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-lg">
+                <div class="text-sm text-gray-500">Global Leader</div>
+                <div class="text-xl font-bold text-primary"><span id="global-hours">5</span> hours/week</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bg-white p-4 rounded-lg shadow-sm">
+        <h2 class="text-xl font-bold text-primary mb-3">Weekly Calendar View <span class="text-sm font-normal text-gray-500">(Click on meetings for details)</span></h2>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 calendar-grid">
+            <!-- Monday -->
+            <div class="rounded-lg overflow-hidden bg-gray-50">
+                <div class="bg-primary text-white p-2 text-center font-bold">Monday</div>
+                <div class="calendar-day p-2">
+                    <div class="meeting-item mb-2 p-2 bg-purple-50 border-l-4 border-primary rounded shadow-sm" data-roles="geo,global" data-meeting="global-pge-prep">
+                        <div class="text-sm font-semibold text-primary">Global PGE Prep Kick-off</div>
+                        <div class="text-xs text-gray-600">08:30 ET · 14:30 BST · 22:30 SGT</div>
+                        <div class="text-xs text-gray-600">30 min</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tuesday -->
+            <div class="rounded-lg overflow-hidden bg-gray-50">
+                <div class="bg-primary text-white p-2 text-center font-bold">Tuesday</div>
+                <div class="calendar-day p-2">
+                    <div class="meeting-item mb-2 p-2 bg-purple-50 border-l-4 border-primary rounded shadow-sm" data-roles="seller,flm,geo" data-meeting="pipeline-growth-tuesday">
+                        <div class="text-sm font-semibold text-primary">Pipeline Growth Tuesday (PGT)</div>
+                        <div class="text-xs text-gray-600">Morning in each GEO</div>
+                        <div class="text-xs text-gray-600">45 min + 2h prospecting</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Wednesday -->
+            <div class="rounded-lg overflow-hidden bg-gray-50">
+                <div class="bg-primary text-white p-2 text-center font-bold">Wednesday</div>
+                <div class="calendar-day p-2">
+                    <div class="meeting-item mb-2 p-2 bg-purple-50 border-l-4 border-primary rounded shadow-sm" data-roles="seller,flm" data-meeting="flm-path-to-plan">
+                        <div class="text-sm font-semibold text-primary">FLM 1:1 Path to Plan Call</div>
+                        <div class="text-xs text-gray-600">Manager's choice</div>
+                        <div class="text-xs text-gray-600">30 min</div>
+                    </div>
+                    <div class="meeting-item mb-2 p-2 bg-purple-50 border-l-4 border-secondary rounded shadow-sm" data-roles="geo,global" data-meeting="global-big-deal">
+                        <div class="text-sm font-semibold text-secondary">Global Big-Deal Review</div>
+                        <div class="text-xs text-gray-600">09:00 - 11:00 ET (every 3rd week)</div>
+                        <div class="text-xs text-gray-600">2 hours</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Thursday -->
+            <div class="rounded-lg overflow-hidden bg-gray-50">
+                <div class="bg-primary text-white p-2 text-center font-bold">Thursday</div>
+                <div class="calendar-day p-2">
+                    <div class="meeting-item mb-2 p-2 bg-purple-50 border-l-4 border-primary rounded shadow-sm" data-roles="global" data-meeting="global-path-to-plan">
+                        <div class="text-sm font-semibold text-primary">Global Path to Plan Call</div>
+                        <div class="text-xs text-gray-600">09:00–11:00 ET</div>
+                        <div class="text-xs text-gray-600">2 hours</div>
+                    </div>
+                    <div class="meeting-item mb-2 p-2 bg-purple-50 border-l-4 border-secondary rounded shadow-sm" data-roles="geo" data-meeting="geo-path-to-plan">
+                        <div class="text-sm font-semibold text-secondary">GEO Path to Plan Call</div>
+                        <div class="text-xs text-gray-600">Weekly (time varies)</div>
+                        <div class="text-xs text-gray-600">60 min</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Friday -->
+            <div class="rounded-lg overflow-hidden bg-gray-50">
+                <div class="bg-primary text-white p-2 text-center font-bold">Friday</div>
+                <div class="calendar-day p-2">
+                    <div class="meeting-item mb-2 p-2 bg-purple-50 border-l-4 border-primary rounded shadow-sm" data-roles="seller,flm" data-meeting="territory-pipeline">
+                        <div class="text-sm font-semibold text-primary">Territory Pipeline Stand-up</div>
+                        <div class="text-xs text-gray-600">Manager sets time</div>
+                        <div class="text-xs text-gray-600">60 min</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-6">
+            <h3 class="text-lg font-bold text-primary mb-2">Bi-weekly & Monthly Meetings</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="meeting-item p-2 bg-purple-50 border-l-4 border-primary rounded shadow-sm" data-roles="seller,flm" data-meeting="pipeline-review">
+                    <div class="text-sm font-semibold text-primary">Pipeline Review 1-on-1</div>
+                    <div class="text-xs text-gray-600">Bi-weekly · 30 min</div>
+                </div>
+                <div class="meeting-item p-2 bg-purple-50 border-l-4 border-primary rounded shadow-sm" data-roles="geo" data-meeting="geo-pipeline-council">
+                    <div class="text-sm font-semibold text-primary">GEO Specific Pipeline Council</div>
+                    <div class="text-xs text-gray-600">Bi-weekly · 60 min</div>
+                </div>
+                <div class="meeting-item p-2 bg-purple-50 border-l-4 border-primary rounded shadow-sm" data-roles="global" data-meeting="cro-pipeline-council">
+                    <div class="text-sm font-semibold text-primary">CRO Pipeline Council</div>
+                    <div class="text-xs text-gray-600">Bi-weekly (moving to monthly) · 30-45 min</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for meeting details -->
+<div id="meetingModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modal-title" class="text-2xl font-bold text-primary mb-4"></h2>
+        
+        <div class="grid grid-cols-3 gap-3 mb-4">
+            <div>
+                <span class="text-xs text-gray-500 block">When</span>
+                <span id="modal-when" class="text-sm font-medium"></span>
+            </div>
+            <div>
+                <span class="text-xs text-gray-500 block">Owner</span>
+                <span id="modal-owner" class="text-sm font-medium"></span>
+            </div>
+            <div>
+                <span class="text-xs text-gray-500 block">Duration</span>
+                <span id="modal-duration" class="text-sm font-medium"></span>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <span class="text-xs text-gray-500 block">Audience</span>
+            <span id="modal-audience" class="text-sm font-medium"></span>
+        </div>
+        
+        <div>
+            <span class="text-xs text-gray-500 block">Purpose</span>
+            <span id="modal-purpose" class="text-sm font-medium"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleFilters = document.querySelectorAll('.role-filter');
+        const meetingItems = document.querySelectorAll('.meeting-item');
+        const modal = document.getElementById('meetingModal');
+        const closeBtn = document.querySelector('.close');
+        
+        // Meeting details data
+        const meetingDetails = {
+            'global-pge-prep': {
+                title: 'Global PGE Prep Kick-off',
+                when: 'Mon 08:30 ET · 14:30 BST · 22:30 SGT',
+                owner: 'CRO',
+                duration: '30 min',
+                audience: 'GEO SVPs, Ops, Enablement, PMM',
+                purpose: 'Prepare for Weekly PGE, align on sales-play, targets, enablement assets'
+            },
+            'pipeline-growth-tuesday': {
+                title: 'Pipeline Growth Tuesday (PGT)',
+                when: 'Tue – First thing a.m. in each GEO',
+                owner: 'GEO Sales Leader',
+                duration: '45 min + 2h prospecting',
+                audience: 'All sellers & FLMs',
+                purpose: 'Kickoff Weekly PGE Process, launch play, leaderboard, talk-tracks, micro-training'
+            },
+            'territory-pipeline': {
+                title: 'Territory Pipeline Stand-up',
+                when: 'Fri (mgr. sets time)',
+                owner: 'Territory Mgr.',
+                duration: '60 min',
+                audience: 'Territory pod',
+                purpose: 'Conclude Weekly PGE Process, review weekly adds/conversions/moves, feedback'
+            },
+            'pipeline-review': {
+                title: 'Pipeline Review 1-on-1',
+                when: 'Bi-weekly',
+                owner: 'FLM',
+                duration: '30 min',
+                audience: 'Individual rep',
+                purpose: 'Inspect PGE at a rep level, funnel quality, conversion %, next-Q gap'
+            },
+            'geo-pipeline-council': {
+                title: 'GEO Specific Pipeline Council',
+                when: 'Bi-weekly',
+                owner: 'GEO SVP + Ops',
+                duration: '60 min',
+                audience: 'GEO GTM Leadership',
+                purpose: 'Inspect PGE at GEO Level, build-rate heat-map, partner pipeline, next-Q coverage'
+            },
+            'cro-pipeline-council': {
+                title: 'CRO Pipeline Council',
+                when: 'Bi-weekly (moving to monthly)',
+                owner: 'CRO',
+                duration: '30-45 min',
+                audience: 'Global GTM + Guests',
+                purpose: 'Inspect PGE at Global Level, company coverage ratio, forecast risk, GTM investments'
+            },
+            'flm-path-to-plan': {
+                title: 'FLM 1:1 Path to Plan Call',
+                when: 'Wed (manager\'s choice)',
+                owner: 'FLM',
+                duration: '30 min',
+                audience: 'Individual rep',
+                purpose: 'Inspect Territory Path to Plan, top 5 deals, ensure path to 100% plan achievement'
+            },
+            'global-path-to-plan': {
+                title: 'Global Path to Plan Call',
+                when: 'Thu 09:00–11:00 ET — every week',
+                owner: 'CRO',
+                duration: '2 hours',
+                audience: 'GTM Leaders',
+                purpose: 'Inspect Global Path to Plan, complete review of functions contributing to quarterly/annual bookings plan'
+            },
+            'geo-path-to-plan': {
+                title: 'GEO Path to Plan Call',
+                when: 'Weekly',
+                owner: 'GEO SVP + Ops',
+                duration: '60 min',
+                audience: 'GEO GTM Leadership',
+                purpose: 'Inspect GEO Path to Plan, ensure alignment on quarterly/annual plan achievement'
+            },
+            'global-big-deal': {
+                title: 'Global Big-Deal Review',
+                when: 'Wed 09:00 - 11:00 ET — every 3rd week',
+                owner: 'CRO',
+                duration: '2 hours',
+                audience: 'Select GTM Leaders + Opp Owner POD',
+                purpose: 'Regular Big Deal Review, inspect top 20 deals globally, ensure alignment to help deals make it across the finish line'
+            }
+        };
+        
+        // Set default active filter
+        document.querySelector('[data-role="all"]').classList.add('bg-primary', 'text-white');
+        document.querySelector('[data-role="all"]').classList.remove('bg-white', 'text-primary');
+        
+        // Role filter functionality
+        roleFilters.forEach(filter => {
+            filter.addEventListener('click', function() {
+                const role = this.getAttribute('data-role');
+                
+                // Update active filter styling
+                roleFilters.forEach(btn => {
+                    btn.classList.remove('bg-primary', 'text-white');
+                    btn.classList.add('bg-white', 'text-primary');
+                });
+                this.classList.add('bg-primary', 'text-white');
+                this.classList.remove('bg-white', 'text-primary');
+                
+                // Filter meetings
+                meetingItems.forEach(item => {
+                    const roles = item.getAttribute('data-roles').split(',');
+                    
+                    if (role === 'all' || roles.includes(role)) {
+                        item.classList.remove('hidden-meeting');
+                        item.style.display = '';
+                    } else {
+                        item.classList.add('hidden-meeting');
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Meeting item click to show modal
+        meetingItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const meetingId = this.getAttribute('data-meeting');
+                const details = meetingDetails[meetingId];
+                
+                // Populate modal with meeting details
+                document.getElementById('modal-title').textContent = details.title;
+                document.getElementById('modal-when').textContent = details.when;
+                document.getElementById('modal-owner').textContent = details.owner;
+                document.getElementById('modal-duration').textContent = details.duration;
+                document.getElementById('modal-audience').textContent = details.audience;
+                document.getElementById('modal-purpose').textContent = details.purpose;
+                
+                // Show modal
+                modal.style.display = 'block';
+            });
+        });
+        
+        // Close modal functionality
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+</script>
